@@ -7,14 +7,10 @@ import java.util.List;
 
 public class EventManager {
 
-    private final List<Listener> listeners;
+    private final List<Listener> listeners = new ArrayList<>();
 
-    public EventManager() {
-        listeners = new ArrayList<>();
-    }
-
-    public void registerListener(Listener... listener) {
-        listeners.addAll(List.of(listener));
+    public void registerListener(Listener... listeners) {
+        this.listeners.addAll(List.of(listeners));
     }
 
     public <T extends GenericEvent> void callEvent(T event) {
@@ -28,15 +24,13 @@ public class EventManager {
     private <T> void executeEvent(T event) {
         listeners.forEach(listener -> {
             List.of(listener.getClass().getMethods()).forEach(method -> {
-                if(method.getAnnotation(EventHandler.class) == null) {
-                    return;
-                }
-
-                if(method.getParameters().length > 0 && method.getParameters()[0].getType().equals(event.getClass())) {
-                    try {
-                        method.invoke(listener, event);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                if(method.getAnnotation(EventHandler.class) != null) {
+                    if (method.getParameters().length > 0 && method.getParameters()[0].getType().equals(event.getClass())) {
+                        try {
+                            method.invoke(listener, event);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             });

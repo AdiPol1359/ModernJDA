@@ -18,8 +18,8 @@ public class CommandManager {
         commandMaps.add(commandMap);
     }
 
-    public void registerCommandMap(CommandMap... commandMap) {
-        commandMaps.addAll(List.of(commandMap));
+    public void registerCommandMap(CommandMap... commandMaps) {
+        this.commandMaps.addAll(List.of(commandMaps));
     }
 
     public CommandMap getDefaultCommandMap() {
