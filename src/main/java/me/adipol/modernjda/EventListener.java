@@ -3,6 +3,7 @@ package me.adipol.modernjda;
 import lombok.AllArgsConstructor;
 import me.adipol.modernjda.command.AbstractCommand;
 import me.adipol.modernjda.command.CommandManager;
+import me.adipol.modernjda.command.events.CommandExceptionEvent;
 import me.adipol.modernjda.command.events.CommandExecuteEvent;
 import me.adipol.modernjda.command.events.CommandMissingPermissionEvent;
 import me.adipol.modernjda.command.events.CommandNotFoundEvent;
@@ -60,7 +61,11 @@ public class EventListener extends ListenerAdapter {
                 eventManager.callEvent(commandExecuteEvent);
 
                 if(!commandExecuteEvent.isCancelled()) {
-                    command.handleCommand(member, channel, event, Arrays.copyOfRange(args, 1, args.length));
+                    try {
+                        command.handleCommand(member, channel, event, Arrays.copyOfRange(args, 1, args.length));
+                    } catch(Exception ex) {
+                        eventManager.callEvent(new CommandExceptionEvent(ex, command, event));
+                    }
                 }
             }
         });
