@@ -63,17 +63,22 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void commandExecuteEvent(CommandExecuteEvent event) {
-        //execute when member execute the command
+        //Execute when member execute the command.
+    }
+
+    @EventHandler
+    public void commandExecuteEvent(CommandExceptionEvent event) {
+        //Execute when command throw error.
     }
 
     @EventHandler
     public void commandMissingPermissionEvent(CommandMissingPermissionEvent event) {
-        //execute when member use command without the appropriate permissions.
+        //Execute when member use command without the appropriate permissions
     }
 
     @EventHandler
     public void commandNotFoundEvent(CommandNotFoundEvent event) {
-        //execute when member use command that not exists.
+        //Execute when member use command that not exists.
     }
 }
 ```
