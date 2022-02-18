@@ -15,7 +15,7 @@ import java.util.Date;
 public class VersionCommand extends AbstractCommand {
 
     @Override
-    public void handleCommand(Member member, MessageChannel channel, MessageReceivedEvent event, String[] args) {
+    public void handleCommand(Member member, MessageChannel channel, MessageReceivedEvent event, String[] args) throws Exception {
         if(!member.isOwner()) {
             return;
         }

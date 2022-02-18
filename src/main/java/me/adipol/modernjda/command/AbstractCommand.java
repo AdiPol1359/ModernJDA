@@ -16,5 +16,5 @@ public abstract class AbstractCommand {
         return commandInfo;
     }
 
-    public abstract void handleCommand(Member member, MessageChannel channel, MessageReceivedEvent event, String[] args);
+    public abstract void handleCommand(Member member, MessageChannel channel, MessageReceivedEvent event, String[] args) throws Exception;
 }
