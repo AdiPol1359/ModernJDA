@@ -9,7 +9,7 @@ public interface VersionInfo {
 
     static boolean checkUpdate() {
         JsonArray jsonArray = Request.builder()
-                .url("https://api.github.com/repos/dzikoysk/reposilite/releases")
+                .url("https://api.github.com/repos/adipol1359/modernjda/releases")
                 .method(RequestMethod.GET)
                 .build()
                 .send(JsonArray.class);
