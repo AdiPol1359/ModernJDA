@@ -19,7 +19,13 @@ public class CommandManager {
     }
 
     public void registerCommandMap(CommandMap... commandMaps) {
-        this.commandMaps.addAll(List.of(commandMaps));
+        List.of(commandMaps).forEach(commandMap -> {
+            if(this.commandMaps.stream().anyMatch(map -> map.getPrefix().equals(commandMap.getPrefix()))) {
+                throw new RuntimeException("You can't add command map with the same prefix! (" + commandMap.getPrefix() + ")");
+            }
+
+            this.commandMaps.add(commandMap);
+        });
     }
 
     public CommandMap getDefaultCommandMap() {
