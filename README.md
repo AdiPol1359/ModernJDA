@@ -2,8 +2,33 @@
 
 Library for easy creation of discord bots in Java based on [JDA](https://github.com/DV8FromTheWorld/JDA).
 
-## Warning!
-This project is under development and it is not recommended to use it!
+## Requirements
+- Java 17 or higher
+
+## Maven
+```xml
+<repository>
+    <id>projectcode-repository</id>
+    <name>ProjectCode Repository</name>
+    <url>https://repo.projectcode.pl/releases</url>
+</repository>
+```
+```xml
+<dependency>
+    <groupId>me.adipol.modernjda</groupId>
+    <artifactId>ModernJDA</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+## Gradle
+```groovy
+maven {
+    url "https://repo.projectcode.pl/releases"
+}
+```
+```groovy
+implementation "me.adipol.modernjda:ModernJDA:1.0.0"
+```
 
 ## Example code
 ```java
@@ -73,7 +98,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void commandMissingPermissionEvent(CommandMissingPermissionEvent event) {
-        //Execute when member use command without the appropriate permissions
+        //Execute when member use command without the appropriate permissions.
     }
 
     @EventHandler
@@ -118,6 +143,37 @@ public class EventListener implements Listener {
         System.out.println(event.getMessage());
     }
 }
+```
+
+## HTTP Request
+```json
+{
+  "foo1": "foo1",
+  "foo2": [
+    "a",
+    "b",
+    "c"
+  ]
+}
+```
+
+```java
+@Getter
+@Setter
+class FooData {
+    private String foo1;
+    private List<String> foo2;
+}
+```
+```java
+Request request = Request.builder()
+        .url("https://api.foo.com")
+        .method(RequestMethod.POST)
+        .header("Content-Type", "application/json") //Set headers
+        .body("foo", "foo") //Set body (only POST and PUT)
+        .build();
+        
+TestData testData = request.send(TestData.class);
 ```
 
 ## Utility classes
