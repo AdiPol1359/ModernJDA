@@ -33,7 +33,6 @@ public class EventListener extends ListenerAdapter {
         String[] args = message.split(" ");
 
         eventManager.callEvent(event);
-
         commandManager.getCommandMaps().stream().filter(map -> message.startsWith(map.getPrefix())).findFirst().ifPresent(commandMap -> {
             String name = args[0].substring(commandMap.getPrefix().length());
             Optional<AbstractCommand> optionalCommand = commandMap.getCommand(name);
