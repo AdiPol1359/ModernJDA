@@ -83,11 +83,13 @@ public class ModernJDA {
     public <T> T loadConfig(String name, Class<T> clazz, boolean copy) {
         representer.addClassTag(clazz, Tag.MAP);
 
-        File file = new File(name + ".yml");
+        name = name + ".yml";
+
+        File file = new File(name);
         Yaml yaml = new Yaml(new Constructor(clazz), representer, dumperOptions);
 
         if(!file.exists() || copy) {
-            yaml.dump(clazz.getConstructor().newInstance(), new PrintWriter(name + ".yml"));
+            yaml.dump(clazz.getConstructor().newInstance(), new PrintWriter(name));
         }
 
         return yaml.load(new FileInputStream(file));
