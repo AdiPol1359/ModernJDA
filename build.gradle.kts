@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.5")
     implementation("com.google.code.gson:gson:2.9.0")
+    implementation("org.yaml:snakeyaml:1.30")
 
     annotationProcessor("org.projectlombok:lombok:1.18.22")
     compileOnly("org.projectlombok:lombok:1.18.22")
