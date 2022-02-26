@@ -28,6 +28,10 @@ public class CommandManager {
         });
     }
 
+    public void registerCommand(AbstractCommand... commands) {
+        getDefaultCommandMap().registerCommand(commands);
+    }
+
     public CommandMap getDefaultCommandMap() {
         return commandMaps.get(0);
     }
