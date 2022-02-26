@@ -33,7 +33,12 @@ implementation "me.adipol.modernjda:ModernJDA:1.0.0"
 ## Example code
 ```java
 public static void main(String[] args) {
-    ModernJDA modernJDA = new ModernJDA("TOKEN");
+    ModernJDA modernJDA = new ClientBuilder()
+            .setToken("YOUR_TOKEN")
+            .checkUpdate(false) //check updates on start (default: true)
+            .enableIntent(GatewayIntent.GUILD_MEMBERS) //optional
+            .enableCache(CacheFlag.ACTIVITY) //optional
+            .build();
     
     modernJDA.run();
 }
@@ -54,7 +59,9 @@ public class FooCommand extends AbstractCommand {
 public static void main(String[] args) {
     ModernJDA modernJDA = new ModernJDA("TOKEN");
     
-    modernJDA.getCommandManager().getDefaultCommandMap().registerCommand(new FooCommand());
+    modernJDA.getCommandManager().registerCommand(new FooCommand());
+    modernJDA.getCommandManager().getDefaultCommandMap().setPrefix("$"); //change prefix to $
+    
     modernJDA.run();
 }
 ```
@@ -63,6 +70,9 @@ public static void main(String[] args) {
 ```java
 @CommandInfo(name = "foo", aliases = {"foo1", "foo2"}) //set aliases for command
 @CommandInfo(name = "foo", permissions = {"role1", "role2"}) //set one of required roles to use command
+@CommandInfo(name = "foo", coolDown = 10000) //command cool down in ms
+@CommandInfo(name = "foo", coolDownScope = CoolDownScope.COMMAND) //cool down for command
+@CommandInfo(name = "foo", coolDownScope = CoolDownScope.MEMBER) //cool down for specific member
 ```
 
 ## Create custom CommandMap
@@ -92,7 +102,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void commandExecuteEvent(CommandExceptionEvent event) {
+    public void commandExceptionEvent(CommandExceptionEvent event) {
         //Execute when command throw error.
     }
 
@@ -104,6 +114,11 @@ public class EventListener implements Listener {
     @EventHandler
     public void commandNotFoundEvent(CommandNotFoundEvent event) {
         //Execute when member use command that not exists.
+    }
+
+    @EventHandler
+    public void commandCoolDownEvent(CommandCoolDownEvent event) {
+        //Execute when member use command with cool down.
     }
 }
 ```
@@ -143,6 +158,22 @@ public class EventListener implements Listener {
         System.out.println(event.getMessage());
     }
 }
+```
+## Custom Config
+```java
+@Getter
+@Setter
+public class MyConfig {
+    private String prefix = "!";
+}
+```
+```java
+MyConfig myConfig = modernJDA.loadConfig("config", MyConfig.class);
+```
+This method will create ``yml`` file with the given name. If the file exists, class fields will be set from configuration file.
+
+```java
+MyConfig myConfig = modernJDA.loadConfig("config", MyConfig.class, true); //create a new file each time the bot is started
 ```
 
 ## HTTP Request
