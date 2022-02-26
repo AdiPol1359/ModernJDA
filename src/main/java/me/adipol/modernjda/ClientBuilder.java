@@ -9,10 +9,9 @@ import java.util.List;
 public class ClientBuilder {
 
     private final List<GatewayIntent> intents = new ArrayList<>();
-    private final List<CacheFlag> flags = new ArrayList<>();
+    private final List<CacheFlag> cacheFlags = new ArrayList<>();
 
     private boolean updates = true;
-
     private String token;
 
     public ClientBuilder setToken(String token) {
@@ -31,7 +30,7 @@ public class ClientBuilder {
     }
 
     public ClientBuilder enableCache(CacheFlag flag) {
-        flags.add(flag);
+        cacheFlags.add(flag);
         return this;
     }
 
@@ -40,6 +39,6 @@ public class ClientBuilder {
             throw new RuntimeException("You need to set the token before build client!");
         }
 
-        return new ModernJDA(token, updates, intents, flags);
+        return new ModernJDA(token, updates, intents, cacheFlags);
     }
 }

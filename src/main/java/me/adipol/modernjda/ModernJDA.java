@@ -36,11 +36,11 @@ public class ModernJDA {
     private final DumperOptions dumperOptions;
 
     private final List<GatewayIntent> intents;
-    private final List<CacheFlag> flags;
+    private final List<CacheFlag> cacheFlags;
 
     private JDA jda;
 
-    public ModernJDA(String token, boolean checkUpdate, List<GatewayIntent> intents, List<CacheFlag> flags) {
+    public ModernJDA(String token, boolean checkUpdate, List<GatewayIntent> intents, List<CacheFlag> cacheFlags) {
         instance = this;
 
         builder = JDABuilder.createDefault(token);
@@ -52,7 +52,7 @@ public class ModernJDA {
         dumperOptions = new DumperOptions();
 
         this.intents = intents;
-        this.flags = flags;
+        this.cacheFlags = cacheFlags;
 
         dumperOptions.setIndent(2);
         dumperOptions.setPrettyFlow(true);
@@ -98,7 +98,7 @@ public class ModernJDA {
     public void run() {
         try {
             intents.forEach(builder::enableIntents);
-            flags.forEach(builder::enableCache);
+            cacheFlags.forEach(builder::enableCache);
 
             jda = builder.build().awaitReady();
         } catch (Exception ex) {
