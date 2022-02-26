@@ -1,6 +1,6 @@
 package me.adipol.modernjda.command.cooldown;
 
-public enum CoolDownType {
+public enum CoolDownScope {
     COMMAND,
     MEMBER
 }

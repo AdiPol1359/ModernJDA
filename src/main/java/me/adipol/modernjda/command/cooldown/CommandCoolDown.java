@@ -1,8 +1,13 @@
-package me.adipol.modernjda.cooldown;
+package me.adipol.modernjda.command.cooldown;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
-public abstract class CoolDown {
+@RequiredArgsConstructor
+public class CommandCoolDown {
+
+    private final int coolDown;
 
     private long coolDownTime = 0;
 
@@ -15,6 +20,6 @@ public abstract class CoolDown {
     }
 
     public void setCoolDown() {
-        coolDownTime = new Date().getTime() + getAnnotation().coolDown();
+        coolDownTime = new Date().getTime() + coolDown;
     }
 }

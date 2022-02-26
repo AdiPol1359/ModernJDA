@@ -2,11 +2,11 @@ package me.adipol.modernjda;
 
 import lombok.AllArgsConstructor;
 import me.adipol.modernjda.command.AbstractCommand;
+import me.adipol.modernjda.command.CommandInfo;
 import me.adipol.modernjda.command.CommandManager;
-import me.adipol.modernjda.command.events.CommandExceptionEvent;
-import me.adipol.modernjda.command.events.CommandExecuteEvent;
-import me.adipol.modernjda.command.events.CommandMissingPermissionEvent;
-import me.adipol.modernjda.command.events.CommandNotFoundEvent;
+import me.adipol.modernjda.command.cooldown.CommandCoolDown;
+import me.adipol.modernjda.command.cooldown.CoolDownMember;
+import me.adipol.modernjda.command.events.*;
 import me.adipol.modernjda.event.EventManager;
 import me.adipol.modernjda.util.MemberUtil;
 import net.dv8tion.jda.api.entities.Member;
@@ -15,7 +15,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -23,6 +25,8 @@ public class EventListener extends ListenerAdapter {
 
     private final CommandManager commandManager;
     private final EventManager eventManager;
+
+    private final List<CoolDownMember> coolDownMembers = new ArrayList<>();
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -43,11 +47,44 @@ public class EventListener extends ListenerAdapter {
             }
 
             AbstractCommand command = optionalCommand.get();
+            CommandInfo commandInfo = command.getAnnotation();
 
-            if(commandMap.getPermissions().length > 0 || command.getAnnotation().permissions().length > 0) {
-                if(!MemberUtil.hasRole(member, commandMap.getPermissions()) && !MemberUtil.hasRole(member, command.getAnnotation().permissions())) {
+            if(commandMap.getPermissions().length > 0 || commandInfo.permissions().length > 0) {
+                if(!MemberUtil.hasRole(member, commandMap.getPermissions()) && !MemberUtil.hasRole(member, commandInfo.permissions())) {
                     eventManager.callEvent(new CommandMissingPermissionEvent(commandMap, command, event));
                     return;
+                }
+            }
+
+            if(commandInfo.coolDown() > 0) {
+                switch(commandInfo.coolDownScope()) {
+                    case COMMAND -> {
+                        CommandCoolDown commandCoolDown = command.getCommandCoolDown();
+
+                        if(commandCoolDown.hasCoolDown()) {
+                            eventManager.callEvent(new CommandCoolDownEvent(-commandCoolDown.getCoolDown(), command, event));
+                            return;
+                        }
+
+                        commandCoolDown.setCoolDown();
+                    }
+                    case MEMBER -> {
+                        String userId = member.getId();
+                        Optional<CoolDownMember> coolDownMember = coolDownMembers.stream().filter(c -> c.getUserId().equals(userId) && c.getCommand().equals(args[0])).findFirst();
+
+                        if(coolDownMember.isPresent()) {
+                            CommandCoolDown commandCoolDown = coolDownMember.get().getCommandCoolDown();
+
+                            if(commandCoolDown.hasCoolDown()) {
+                                eventManager.callEvent(new CommandCoolDownEvent(-commandCoolDown.getCoolDown(), command, event));
+                                return;
+                            }
+
+                            commandCoolDown.setCoolDown();
+                        } else {
+                            coolDownMembers.add(new CoolDownMember(userId, args[0], commandInfo.coolDown()));
+                        }
+                    }
                 }
             }
 
