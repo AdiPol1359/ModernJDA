@@ -17,7 +17,7 @@ Library for easy creation of discord bots in Java based on [JDA](https://github.
 <dependency>
     <groupId>me.adipol.modernjda</groupId>
     <artifactId>ModernJDA</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 ## Gradle
@@ -27,7 +27,7 @@ maven {
 }
 ```
 ```groovy
-implementation "me.adipol.modernjda:ModernJDA:1.0.0"
+implementation "me.adipol.modernjda:ModernJDA:1.0.1"
 ```
 
 ## Example code
@@ -35,7 +35,7 @@ implementation "me.adipol.modernjda:ModernJDA:1.0.0"
 public static void main(String[] args) {
     ModernJDA modernJDA = new ClientBuilder()
             .setToken("YOUR_TOKEN")
-            .checkUpdate(false) //check updates on start (default: true)
+            .checkUpdate(false) //optional, check updates on start (default: true)
             .enableIntent(GatewayIntent.GUILD_MEMBERS) //optional
             .enableCache(CacheFlag.ACTIVITY) //optional
             .build();
@@ -56,14 +56,8 @@ public class FooCommand extends AbstractCommand {
 }
 ```
 ```java
-public static void main(String[] args) {
-    ModernJDA modernJDA = new ModernJDA("TOKEN");
-    
-    modernJDA.getCommandManager().registerCommand(new FooCommand());
-    modernJDA.getCommandManager().getDefaultCommandMap().setPrefix("$"); //change prefix to $
-    
-    modernJDA.run();
-}
+modernJDA.getCommandManager().registerCommand(new FooCommand());
+modernJDA.getCommandManager().getDefaultCommandMap().setPrefix("$"); //change prefix to $
 ```
 
 ### CommandInfo
@@ -123,16 +117,10 @@ public class EventListener implements Listener {
 }
 ```
 ```java
-public static void main(String[] args) {
-    ModernJDA modernJDA = new ModernJDA("TOKEN");
-    
-    modernJDA.getEventManager().registerListener(new EventListener());
-    
-    modernJDA.run();
-}
+modernJDA.getEventManager().registerListener(new EventListener());
 ```
 
-## Create custom event
+## Custom Event
 ```java
 @AllArgsConstructor
 @Getter
@@ -163,17 +151,17 @@ public class EventListener implements Listener {
 ```java
 @Getter
 @Setter
-public class MyConfig {
+public class MyConfig implements Config {
     private String prefix = "!";
 }
 ```
 ```java
-MyConfig myConfig = modernJDA.loadConfig("config", MyConfig.class);
+MyConfig myConfig = ConfigUtil.loadConfig("config", MyConfig.class);
 ```
 This method will create ``yml`` file with the given name. If the file exists, class fields will be set from configuration file.
 
 ```java
-MyConfig myConfig = modernJDA.loadConfig("config", MyConfig.class, true); //create a new file each time the bot is started
+MyConfig myConfig = modernJDA.loadConfig("config", MyConfig.class, true); //override file each time the bot is started
 ```
 
 ## HTTP Request
