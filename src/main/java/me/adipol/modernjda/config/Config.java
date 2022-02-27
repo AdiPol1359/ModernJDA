@@ -1,2 +1,4 @@
-package me.adipol.modernjda.config;public interface Config {
+package me.adipol.modernjda.config;
+
+public interface Config {
 }
