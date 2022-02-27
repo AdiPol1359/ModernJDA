@@ -5,7 +5,7 @@ import me.adipol.modernjda.request.Request;
 import me.adipol.modernjda.request.RequestMethod;
 
 public interface VersionInfo {
-    String VERSION = "1.0.0";
+    String VERSION = "1.0.1";
 
     static boolean checkUpdate() {
         JsonArray jsonArray = Request.builder()
