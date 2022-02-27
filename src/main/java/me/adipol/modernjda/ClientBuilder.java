@@ -12,6 +12,7 @@ public class ClientBuilder {
     private final List<CacheFlag> cacheFlags = new ArrayList<>();
 
     private boolean updates = true;
+
     private String token;
 
     public ClientBuilder setToken(String token) {
